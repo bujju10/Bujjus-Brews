@@ -1,37 +1,30 @@
-// Load the app and check for a saved API key
+// --- PASTE YOUR API KEY HERE ---
+// Keep the quotation marks around your key!
+const API_KEY = "AIzaSyCXkx9pG-0ZKTdm_rUiNNJBSMs2EeNOYb0"; 
+
+// --- Navigation & Setup ---
 window.onload = () => {
-    const savedKey = localStorage.getItem('bujjuApiKey');
-    if (savedKey) {
-        document.getElementById('api-key').value = savedKey;
-        document.getElementById('key-status').innerText = "✅ Saved";
-    }
     renderFeed();
 };
 
-// Handle navigating between the four pages
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
 }
 
-// Securely save the API key to the browser
-function saveApiKey() {
-    const key = document.getElementById('api-key').value;
-    localStorage.setItem('bujjuApiKey', key);
-    document.getElementById('key-status').innerText = "✅ Saved";
-}
-
-// Helper function to talk to Gemini AI
+// --- Gemini API Call Helper ---
 async function fetchFromAI(prompt, buttonId, originalBtnText) {
-    const apiKey = localStorage.getItem('bujjuApiKey');
-    if (!apiKey) return alert("Please save your new Gemini API key on the Home page first!");
+    if (API_KEY === "add ur api key" || !API_KEY) {
+        alert("Please add your API key to the app.js file!");
+        return "Error: No API Key.";
+    }
 
     const btn = document.getElementById(buttonId);
     btn.innerText = "Thinking..."; 
     btn.disabled = true;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -49,22 +42,22 @@ async function fetchFromAI(prompt, buttonId, originalBtnText) {
         console.error(error);
         btn.innerText = originalBtnText; 
         btn.disabled = false;
-        return "Error connecting to AI. Please check your API key.";
+        return "Error connecting to AI. Please check your internet connection.";
     }
 }
 
-// Feature 1: AI Recipe Generator
+// --- AI Recipe Generator ---
 async function generateAI() {
     const ingredients = document.getElementById('ai-ingredients').value;
     const output = document.getElementById('ai-output');
     if(!ingredients) return alert("Please enter some ingredients!");
     
     const prompt = `Act as a master chef. Create a simple, delicious recipe using primarily these ingredients: ${ingredients}. Format the response clearly with a Title, Ingredients list, and Step-by-Step Instructions.`;
-    output.innerText = "Generating recipe...";
-    output.innerText = await fetchFromAI(prompt, 'btn-generate', 'Generate Recipe');
+    output.innerText = "Synthesizing recipe...";
+    output.innerText = await fetchFromAI(prompt, 'btn-generate', 'Synthesize Recipe');
 }
 
-// Feature 2: Store & Scale Measurements
+// --- AI Recipe Scaler ---
 async function scaleRecipe() {
     const name = document.getElementById('recipe-name').value;
     const base = document.getElementById('base-servings').value;
@@ -75,11 +68,11 @@ async function scaleRecipe() {
     if(!name || !base || !baseIng || !target) return alert("Please fill out all fields!");
 
     const prompt = `Act as a precise culinary mathematician. I have a recipe called "${name}". The original recipe makes ${base} servings and uses these ingredients: ${baseIng}. I need to scale this to make ${target} servings. Calculate the new ingredient amounts. Return ONLY the new list of ingredients and their exact scaled measurements.`;
-    output.innerText = "Scaling ingredients...";
-    output.innerText = await fetchFromAI(prompt, 'btn-scale', 'Scale with AI');
+    output.innerText = "Executing scaling algorithms...";
+    output.innerText = await fetchFromAI(prompt, 'btn-scale', 'Execute Scaling');
 }
 
-// Feature 3: Post Dishes (Community Feed stored locally)
+// --- Community Feed Logic ---
 let defaultPosts = [{
     title: "Classic Grape Wine", 
     author: "Bujju",
