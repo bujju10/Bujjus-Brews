@@ -279,3 +279,33 @@ input:focus, textarea:focus {
     margin-bottom: 15px;
     border-radius: 8px;
 }
+
+/* --- LOGO STYLING --- */
+
+/* Small logo in the Navbar */
+.nav-logo-img {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    border: 1px solid var(--primary-red);
+    box-shadow: 0 0 10px var(--glow-red);
+    object-fit: cover;
+}
+
+/* Large logo on the Home Page */
+.main-hero-logo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 3px solid var(--primary-red);
+    box-shadow: 0 0 30px var(--glow-red);
+    animation: logo-pulse 3s infinite ease-in-out;
+    object-fit: cover;
+}
+
+/* Logo pulse animation to match your tech theme */
+@keyframes logo-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--glow-red); }
+    50% { transform: scale(1.05); box-shadow: 0 0 40px var(--glow-red); }
+}
