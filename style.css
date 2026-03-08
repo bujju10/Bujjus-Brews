@@ -45,4 +45,12 @@ input, textarea { width: 100%; padding: 14px; background: rgba(0,0,0,0.3); borde
 .btn-cyan { background: var(--accent-cyan); color: #000; box-shadow: 0 0 15px var(--glow-cyan); }
 .btn-purple { background: var(--accent-purple); box-shadow: 0 0 15px rgba(178, 36, 239, 0.3); }
 
-.active-user-display { background: rgba(0,240,255,0.1); border: 1px solid var(--accent-cyan); padding: 10px; border-radius: 6px; color: var(--accent-cyan); margin-bottom: 15px; font-family: monospace; }
+
+
+.account-card { border-left-color: var(--accent-cyan) !important; margin-bottom: 20px; }
+.active-user-display { 
+    margin-bottom: 15px; padding: 10px; background: rgba(0, 240, 255, 0.1); 
+    border-radius: 6px; border: 1px solid var(--accent-cyan);
+    font-family: monospace; font-size: 0.9rem; color: var(--accent-cyan);
+}
+#display-username { font-weight: bold; text-transform: uppercase; }
