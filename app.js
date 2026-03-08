@@ -50,13 +50,66 @@ async function fetchFromAI(prompt, buttonId, originalBtnText) {
     }
 }
 
+// Add to the top of app.js
+let recipeHistory = JSON.parse(localStorage.getItem('bujjuHistory')) || [];
+
+// Update your generateAI function
 async function generateAI() {
     const ingredients = document.getElementById('ai-ingredients').value;
     const output = document.getElementById('ai-output');
     if(!ingredients) return alert("Enter ingredients!");
+    
     const prompt = `Create a recipe for these ingredients: ${ingredients}. Format with Title, Ingredients, and Steps.`;
-    output.innerText = await fetchFromAI(prompt, 'btn-generate', 'Synthesize');
+    output.innerText = "Synthesizing...";
+    
+    const result = await fetchFromAI(prompt, 'btn-generate', 'Synthesize');
+    output.innerText = result;
+
+    // --- SAVE TO HISTORY ---
+    const newEntry = {
+        ingredients: ingredients,
+        recipe: result,
+        date: new Date().toLocaleString()
+    };
+    recipeHistory.unshift(newEntry);
+    localStorage.setItem('bujjuHistory', JSON.stringify(recipeHistory));
+    renderHistory();
 }
+
+// Function to display the history
+function renderHistory() {
+    const historyList = document.getElementById('history-list');
+    historyList.innerHTML = '';
+
+    if (recipeHistory.length === 0) {
+        historyList.innerHTML = '<p class="terminal-text">No synthesis history found.</p>';
+        return;
+    }
+
+    recipeHistory.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.innerHTML = `
+            <h3 style="color: var(--accent-gold);">Log #${recipeHistory.length - index}</h3>
+            <p><small>Ingredients: ${item.ingredients}</small></p>
+            <div class="terminal-text" style="font-size: 0.9rem; margin-top: 10px;">${item.recipe.substring(0, 100)}...</div>
+            <button class="btn-glow btn-gold" style="padding: 5px 10px; font-size: 0.7rem; margin-top: 10px;" onclick="viewHistoryItem(${index})">View Full Log</button>
+        `;
+        historyList.appendChild(div);
+    });
+}
+
+function viewHistoryItem(index) {
+    const item = recipeHistory[index];
+    alert(`RECIPE LOG:\n\n${item.recipe}`);
+}
+
+// Ensure history renders on load
+const originalOnload = window.onload;
+window.onload = () => {
+    originalOnload();
+    renderHistory();
+};
 
 async function scaleRecipe() {
     const name = document.getElementById('recipe-name').value;
@@ -96,4 +149,5 @@ function renderFeed() {
         feed.appendChild(div);
     });
 }
+
 
