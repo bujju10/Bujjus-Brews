@@ -269,3 +269,13 @@ input:focus, textarea:focus {
     font-weight: bold; 
     text-transform: uppercase; 
 }
+
+.header-gold { border-left-color: var(--accent-gold); background: rgba(255, 184, 0, 0.1); }
+.history-item {
+    background: rgba(20, 22, 35, 0.4);
+    border: 1px solid var(--glass-border);
+    padding: 15px;
+    border-left: 4px solid var(--accent-gold);
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
