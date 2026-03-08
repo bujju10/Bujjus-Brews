@@ -5,99 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bujju's Brews</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="bg-glow glow-red"></div>
+    <div class="bg-glow glow-cyan"></div>
+
     <nav class="navbar">
-        <div class="nav-brand"><i class="fa-solid fa-wine-glass-empty bounce-icon"></i> Bujju's Brews</div>
+        <div class="nav-brand"><i class="fa-solid fa-flask-vial brand-icon"></i> Bujju's Brews</div>
         <ul class="nav-links">
-            <li><a href="#" onclick="showPage('home')"><i class="fa-solid fa-house"></i> Home</a></li>
-            <li><a href="#" onclick="showPage('ai-recipe')"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Recipe</a></li>
-            <li><a href="#" onclick="showPage('store-measurements')"><i class="fa-solid fa-scale-balanced"></i> Store & Scale</a></li>
-            <li><a href="#" onclick="showPage('post-dishes')"><i class="fa-solid fa-utensils"></i> Community Feed</a></li>
+            <li><a href="#" onclick="showPage('home')" class="nav-item"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="#" onclick="showPage('ai-recipe')" class="nav-item"><i class="fa-solid fa-bolt"></i> AI Recipe</a></li>
+            <li><a href="#" onclick="showPage('store-measurements')" class="nav-item"><i class="fa-solid fa-layer-group"></i> Scale</a></li>
+            <li><a href="#" onclick="showPage('post-dishes')" class="nav-item"><i class="fa-solid fa-globe"></i> Community</a></li>
         </ul>
     </nav>
 
     <div class="container">
         <section id="home" class="page active">
             <div class="hero-header">
-                <h1>Welcome to Bujju's Brews</h1>
-                <p class="intro-text">Your ultimate, AI-powered kitchen and fermentation companion.</p>
+                <h1>Master Your <span class="text-gradient">Kitchen</span></h1>
+                <p class="intro-text">AI-powered generation, scaling, and fermentation tracking.</p>
             </div>
             
-            <div class="feature-card settings-card">
-                <div class="card-icon"><i class="fa-solid fa-gear fa-spin-hover"></i></div>
+            <div class="glass-card settings-card hover-spin">
+                <div class="card-icon icon-gold"><i class="fa-solid fa-microchip"></i></div>
                 <div class="card-content">
-                    <h3>API Settings</h3>
-                    <p>Paste your new, secure Gemini API key here. It is saved locally in your browser.</p>
+                    <h3>Engine Settings</h3>
+                    <p>Initialize your Gemini AI core. Your key is encrypted locally in your browser.</p>
                     <div class="input-group">
-                        <input type="password" id="api-key" placeholder="Enter new Gemini API Key">
-                        <button class="btn-settings" onclick="saveApiKey()"><i class="fa-solid fa-floppy-disk"></i> Save Key</button>
+                        <input type="password" id="api-key" placeholder="Acknowledge Gemini API Key...">
+                        <button class="btn-glow btn-gold" onclick="saveApiKey()"><i class="fa-solid fa-lock"></i> Secure Key</button>
                     </div>
                     <span id="key-status" class="status-badge"></span>
                 </div>
             </div>
 
             <div class="features-grid">
-                <div class="feature-card color-ai" onclick="showPage('ai-recipe')">
-                    <div class="card-icon"><i class="fa-solid fa-robot"></i></div>
-                    <h3>1. AI Recipe Generator</h3>
-                    <p>Search for new recipes by inputting the ingredients you have right now.</p>
+                <div class="glass-card feature-card hover-pulse" onclick="showPage('ai-recipe')">
+                    <div class="card-icon icon-red"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                    <h3>1. AI Generation</h3>
+                    <p>Input available ingredients and let the neural net synthesize a perfect recipe.</p>
                 </div>
                 
-                <div class="feature-card color-scale" onclick="showPage('store-measurements')">
-                    <div class="card-icon"><i class="fa-solid fa-calculator"></i></div>
-                    <h3>2. Store & Scale</h3>
-                    <p>Store your recipe measurements. Need to cook for 10 instead of 5? The AI scales it perfectly.</p>
+                <div class="glass-card feature-card hover-float" onclick="showPage('store-measurements')">
+                    <div class="card-icon icon-cyan"><i class="fa-solid fa-sliders"></i></div>
+                    <h3>2. Smart Scaling</h3>
+                    <p>Dynamic algorithmic scaling for any batch size. Let the AI calculate the perfect ratios.</p>
                 </div>
                 
-                <div class="feature-card color-community" onclick="showPage('post-dishes')">
-                    <div class="card-icon"><i class="fa-solid fa-users"></i></div>
-                    <h3>3. Post Your Dishes</h3>
-                    <p>Post the dishes you make so others can get your recipes too.</p>
+                <div class="glass-card feature-card hover-bounce" onclick="showPage('post-dishes')">
+                    <div class="card-icon icon-purple"><i class="fa-solid fa-satellite-dish"></i></div>
+                    <h3>3. Network Feed</h3>
+                    <p>Broadcast your successful brews and dishes to the local community mainframe.</p>
                 </div>
             </div>
         </section>
 
         <section id="ai-recipe" class="page">
-            <div class="page-header header-ai">
-                <h2><i class="fa-solid fa-wand-magic-sparkles"></i> AI Recipe Generator</h2>
-                <p>What ingredients do you have right now?</p>
+            <div class="page-header header-red">
+                <h2><i class="fa-solid fa-fire-flame-curved"></i> AI Recipe Synthesis</h2>
+                <p>Initialize the generator with your current inventory.</p>
             </div>
-            <textarea id="ai-ingredients" rows="3" placeholder="e.g., 1kg grapes, sugar, yeast..."></textarea>
-            <button class="btn-ai" onclick="generateAI()" id="btn-generate"><i class="fa-solid fa-fire-burner"></i> Generate Recipe</button>
-            <div id="ai-output" class="output-box">Your recipe will appear here...</div>
+            <textarea id="ai-ingredients" rows="4" placeholder="[ INPUT INGREDIENTS ]: e.g., 2kg grapes, yeast, sugar..."></textarea>
+            <button class="btn-glow btn-red" onclick="generateAI()" id="btn-generate"><i class="fa-solid fa-wand-magic-sparkles"></i> Synthesize Recipe</button>
+            <div id="ai-output" class="output-box terminal-text">Awaiting input parameters...</div>
         </section>
 
         <section id="store-measurements" class="page">
-            <div class="page-header header-scale">
-                <h2><i class="fa-solid fa-scale-balanced"></i> Store & Scale Recipes</h2>
-                <p>Enter a base recipe and let AI scale it accurately for a new serving size.</p>
+            <div class="page-header header-cyan">
+                <h2><i class="fa-solid fa-sliders"></i> Algorithmic Scaler</h2>
+                <p>Input baseline metrics to calculate new yields.</p>
             </div>
-            <input type="text" id="recipe-name" placeholder="Recipe Name (e.g., Homemade Bread)">
-            <input type="number" id="base-servings" placeholder="Original Servings (e.g., 5)">
-            <textarea id="base-ingredients" rows="4" placeholder="Base Ingredients (e.g., 500g flour, 10g yeast)"></textarea>
+            
+            <div class="input-grid">
+                <input type="text" id="recipe-name" placeholder="Target Recipe (e.g., Homemade Bread)">
+                <input type="number" id="base-servings" placeholder="Baseline Yield (e.g., 5)">
+            </div>
+            <textarea id="base-ingredients" rows="3" placeholder="Baseline Ingredients (e.g., 500g flour, 10g yeast)"></textarea>
             
             <div class="scale-section">
-                <label><i class="fa-solid fa-arrow-up-right-dots"></i> Scale to new servings:</label>
-                <input type="number" id="target-servings" placeholder="e.g., 10">
-                <button class="btn-scale-action" onclick="scaleRecipe()" id="btn-scale"><i class="fa-solid fa-bolt"></i> Scale with AI</button>
+                <div class="scale-controls">
+                    <label><i class="fa-solid fa-crosshairs"></i> Target Yield:</label>
+                    <input type="number" id="target-servings" placeholder="e.g., 10">
+                </div>
+                <button class="btn-glow btn-cyan" onclick="scaleRecipe()" id="btn-scale"><i class="fa-solid fa-bolt-lightning"></i> Execute Scaling</button>
             </div>
-            <div id="scale-output" class="output-box">Scaled ingredients will appear here...</div>
+            <div id="scale-output" class="output-box terminal-text">Awaiting baseline data...</div>
         </section>
 
         <section id="post-dishes" class="page">
-            <div class="page-header header-community">
-                <h2><i class="fa-solid fa-camera-retro"></i> Community Feed</h2>
-                <p>Share your latest culinary creation!</p>
+            <div class="page-header header-purple">
+                <h2><i class="fa-solid fa-satellite-dish"></i> Community Broadcast</h2>
+                <p>Transmit your logs to the network.</p>
             </div>
             
-            <div class="post-form">
-                <input type="text" id="post-title" placeholder="Dish Name">
-                <input type="text" id="post-author" placeholder="Your Name">
-                <textarea id="post-desc" rows="3" placeholder="How did you make it? Include the recipe!"></textarea>
-                <button class="btn-community" onclick="postDish()"><i class="fa-solid fa-paper-plane"></i> Post Dish</button>
+            <div class="glass-card post-form">
+                <div class="input-grid">
+                    <input type="text" id="post-title" placeholder="Dish / Brew Designation">
+                    <input type="text" id="post-author" placeholder="Author ID">
+                </div>
+                <textarea id="post-desc" rows="3" placeholder="Transmission Log: How did you make it?"></textarea>
+                <button class="btn-glow btn-purple" onclick="postDish()"><i class="fa-solid fa-paper-plane"></i> Broadcast</button>
             </div>
             <div id="feed" class="feed-container"></div>
         </section>
