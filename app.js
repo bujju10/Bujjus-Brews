@@ -1,4 +1,4 @@
-const API_KEY = "PASTE_YOUR_NEW_KEY_HERE"; 
+const API_KEY = "YOUR_NEW_API_KEY_HERE"; 
 
 window.onload = () => {
     const savedUser = localStorage.getItem('bujjuUser');
@@ -6,184 +6,82 @@ window.onload = () => {
         document.getElementById('user-status').innerText = `✅ ID Active: ${savedUser}`;
         document.getElementById('display-username').innerText = savedUser;
     }
+    renderHistory();
     renderFeed();
 };
 
-function saveUser() {
-    const user = document.getElementById('user-name-input').value;
-    if (!user) return alert("Please enter a username!");
-    localStorage.setItem('bujjuUser', user);
-    document.getElementById('user-status').innerText = `✅ ID Active: ${user}`;
-    document.getElementById('display-username').innerText = user;
-    alert(`Account initialized for ${user}!`);
-}
-function resetUser() {
-    if (confirm("Are you sure you want to reset your User ID? This will log you out.")) {
-        localStorage.removeItem('bujjuUser');
-        document.getElementById('user-status').innerText = "ID Reset. Please re-initialize.";
-        document.getElementById('display-username').innerText = "Guest";
-        document.getElementById('user-name-input').value = "";
-        alert("User ID has been cleared.");
-    }
-}
 function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
 }
 
-// --- AI Logic ---
-async function fetchFromAI(prompt, buttonId, originalBtnText) {
-    const btn = document.getElementById(buttonId);
-    btn.innerText = "Processing..."; btn.disabled = true;
+// --- AUTH ---
+function saveUser() {
+    const user = document.getElementById('user-name-input').value;
+    if (!user) return alert("Enter a username!");
+    localStorage.setItem('bujjuUser', user);
+    location.reload();
+}
 
+function resetUser() {
+    if(confirm("Reset User ID?")) { localStorage.removeItem('bujjuUser'); location.reload(); }
+}
+
+// --- AI CORE ---
+async function fetchFromAI(prompt, btnId, originalText) {
+    const btn = document.getElementById(btnId);
+    btn.innerText = "Processing..."; btn.disabled = true;
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
-        const data = await response.json();
-        btn.innerText = originalBtnText; btn.disabled = false;
+        const data = await res.json();
+        btn.innerText = originalText; btn.disabled = false;
         return data.candidates[0].content.parts[0].text;
-    } catch (error) {
-        btn.innerText = originalBtnText; btn.disabled = false;
-        return "Critical Error: Key may be leaked or connection lost.";
+    } catch (e) { 
+        btn.innerText = originalText; btn.disabled = false;
+        return "System Error: Key leaked or connection failed.";
     }
 }
 
-// Add to the top of app.js
-let recipeHistory = JSON.parse(localStorage.getItem('bujjuHistory')) || [];
-
-// Update your generateAI function
 async function generateAI() {
-    const ingredients = document.getElementById('ai-ingredients').value;
+    const ing = document.getElementById('ai-ingredients').value;
     const output = document.getElementById('ai-output');
-    if(!ingredients) return alert("Enter ingredients!");
+    if(!ing) return alert("Input ingredients!");
+    const prompt = `Create a recipe for: ${ing}. Format with Title, Ingredients, and Steps.`;
+    const res = await fetchFromAI(prompt, 'btn-generate', 'Synthesize');
+    output.innerText = res;
     
-    const prompt = `Create a recipe for these ingredients: ${ingredients}. Format with Title, Ingredients, and Steps.`;
-    output.innerText = "Synthesizing...";
+    // Save to History
+    let hist = JSON.parse(localStorage.getItem('bujjuHistory')) || [];
+    hist.unshift({ recipe: res, date: new Date().toLocaleString() });
+    localStorage.setItem('bujjuHistory', JSON.stringify(hist));
     
-    const result = await fetchFromAI(prompt, 'btn-generate', 'Synthesize');
-    output.innerText = result;
-
-    // --- SAVE TO HISTORY ---
-    const newEntry = {
-        ingredients: ingredients,
-        recipe: result,
-        date: new Date().toLocaleString()
-    };
-    recipeHistory.unshift(newEntry);
-    localStorage.setItem('bujjuHistory', JSON.stringify(recipeHistory));
-    renderHistory();
-}
-
-// Function to display the history
-function renderHistory() {
-    const historyList = document.getElementById('history-list');
-    historyList.innerHTML = '';
-
-    if (recipeHistory.length === 0) {
-        historyList.innerHTML = '<p class="terminal-text">No synthesis history found.</p>';
-        return;
-    }
-
-    recipeHistory.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'history-item';
-        div.innerHTML = `
-            <h3 style="color: var(--accent-gold);">Log #${recipeHistory.length - index}</h3>
-            <p><small>Ingredients: ${item.ingredients}</small></p>
-            <div class="terminal-text" style="font-size: 0.9rem; margin-top: 10px;">${item.recipe.substring(0, 100)}...</div>
-            <button class="btn-glow btn-gold" style="padding: 5px 10px; font-size: 0.7rem; margin-top: 10px;" onclick="viewHistoryItem(${index})">View Full Log</button>
-        `;
-        historyList.appendChild(div);
-    });
-}
-
-function viewHistoryItem(index) {
-    const item = recipeHistory[index];
-    alert(`RECIPE LOG:\n\n${item.recipe}`);
-}
-
-// Ensure history renders on load
-const originalOnload = window.onload;
-window.onload = () => {
-    originalOnload();
-    renderHistory();
-};
-
-async function scaleRecipe() {
-    const name = document.getElementById('recipe-name').value;
-    const base = document.getElementById('base-servings').value;
-    const baseIng = document.getElementById('base-ingredients').value;
-    const target = document.getElementById('target-servings').value;
-    const output = document.getElementById('scale-output');
-    const prompt = `Scale recipe "${name}" from ${base} to ${target} servings. Ingredients: ${baseIng}. Return only scaled list.`;
-    output.innerText = await fetchFromAI(prompt, 'btn-scale', 'Execute Scaling');
-}
-
-// --- Community Logic ---
-let posts = JSON.parse(localStorage.getItem('bujjuFeed')) || [];
-
-function postDish() {
-    const username = localStorage.getItem('bujjuUser') || "Guest";
-    const title = document.getElementById('post-title').value;
-    const desc = document.getElementById('post-desc').value;
-
-    if(!title || !desc) return alert("Fill out all fields!");
-
-    posts.unshift({ title, author: username, desc, date: new Date().toLocaleDateString() }); 
-    localStorage.setItem('bujjuFeed', JSON.stringify(posts));
-    
-    document.getElementById('post-title').value = '';
-    document.getElementById('post-desc').value = '';
-    renderFeed();
-}
-
-function renderFeed() {
-    const feed = document.getElementById('feed');
-    feed.innerHTML = ''; 
-    posts.forEach(post => {
-        const div = document.createElement('div');
-        div.className = 'feed-item';
-        div.innerHTML = `<h3>${post.title}</h3><p><small>User_ID: <strong>${post.author}</strong> | Timestamp: ${post.date}</small></p><p>${post.desc}</p>`;
-        feed.appendChild(div);
-    });
-}
-// --- NEW DOWNLOAD LOGIC ---
-
-function downloadCurrentRecipe() {
-    const content = document.getElementById('ai-output').innerText;
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `Bujjus_Brews_Log_${timestamp}.txt`;
-    
-    // Create the file data
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    
-    // Create a hidden link and click it to trigger the download
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    
-    // Cleanup
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-}
-
-// --- UPDATE YOUR generateAI FUNCTION ---
-// Add one line at the end of your generateAI function in app.js:
-
-async function generateAI() {
-    // ... existing logic ...
-    const result = await fetchFromAI(prompt, 'btn-generate', 'Synthesize');
-    output.innerText = result;
-
-    // Show the download button once the recipe is ready
     document.getElementById('btn-download').style.display = 'inline-flex';
-
-    // ... save to history logic ...
+    document.getElementById('btn-shop').style.display = 'inline-flex';
+    renderHistory();
 }
 
+// --- UTILITIES ---
+function downloadCurrentRecipe() {
+    const blob = new Blob([document.getElementById('ai-output').innerText], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `Recipe_Log_${Date.now()}.txt`;
+    a.click();
+}
 
+function extractShoppingList() {
+    const text = document.getElementById('ai-output').innerText;
+    const items = text.split('\n').filter(l => l.includes('-') || l.includes('*'));
+    const list = document.getElementById('shopping-items');
+    list.innerHTML = items.map(i => `<li><input type="checkbox"> ${i}</li>`).join('');
+    document.getElementById('shopping-list-display').style.display = 'block';
+}
+
+function renderHistory() {
+    const list = document.getElementById('history-list');
+    const hist = JSON.parse(localStorage.getItem('bujjuHistory')) || [];
+    list.innerHTML = hist.map(h => `<div class="glass-card"><strong>${h.date}</strong><p>${h.recipe.substring(0,100)}...</p></div>`).join('');
+}
