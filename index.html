@@ -29,18 +29,19 @@
                 <p class="intro-text">Personalized AI generation and community broadcasting.</p>
             </div>
 
-            <div class="glass-card settings-card account-card">
-                <div class="card-icon icon-cyan"><i class="fa-solid fa-user-astronaut"></i></div>
-                <div class="card-content">
-                    <h3>User Authentication</h3>
-                    <p>Create your local account ID to begin broadcasting to the community.</p>
-                    <div class="input-group">
-                        <input type="text" id="user-name-input" placeholder="Pick a Username...">
-                        <button class="btn-glow btn-cyan" onclick="saveUser()"><i class="fa-solid fa-user-plus"></i> Initialize ID</button>
-                    </div>
-                    <span id="user-status" class="status-badge"></span>
-                </div>
-            </div>
+           <div class="glass-card settings-card account-card">
+    <div class="card-icon icon-cyan"><i class="fa-solid fa-user-astronaut"></i></div>
+    <div class="card-content">
+        <h3>User Authentication</h3>
+        <p>Initialize your local account ID to begin broadcasting.</p>
+        <div class="input-group">
+            <input type="text" id="user-name-input" placeholder="Pick a Username...">
+            <button class="btn-glow btn-cyan" onclick="saveUser()"><i class="fa-solid fa-user-plus"></i> Initialize ID</button>
+            <button class="btn-glow btn-red-outline" onclick="resetUser()" style="width: auto; background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red);"><i class="fa-solid fa-power-off"></i> Reset</button>
+        </div>
+        <span id="user-status" class="status-badge"></span>
+    </div>
+</div>
             
             <div class="glass-card settings-card">
                 <div class="card-icon icon-gold"><i class="fa-solid fa-microchip"></i></div>
@@ -106,3 +107,4 @@
     <script src="app.js"></script>
 </body>
 </html>
+
