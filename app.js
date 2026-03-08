@@ -107,3 +107,4 @@ function renderFeed() {
         feed.appendChild(div);
     });
 }
+
