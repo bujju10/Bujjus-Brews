@@ -13,14 +13,10 @@
     <div class="bg-glow glow-cyan"></div>
 
     <nav class="navbar">
-        <div class="nav-brand">
-            <img src="logo.png" alt="Logo" class="nav-logo-img"> 
-            Bujju's Brews
-        </div>
+        <div class="nav-brand"><i class="fa-solid fa-flask-vial brand-icon"></i> Bujju's Brews</div>
         <ul class="nav-links">
             <li><a href="#" onclick="showPage('home')" class="nav-item"><i class="fa-solid fa-house"></i> Home</a></li>
             <li><a href="#" onclick="showPage('ai-recipe')" class="nav-item"><i class="fa-solid fa-bolt"></i> AI Recipe</a></li>
-            <li><a href="#" onclick="showPage('history')" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
             <li><a href="#" onclick="showPage('store-measurements')" class="nav-item"><i class="fa-solid fa-layer-group"></i> Scale</a></li>
             <li><a href="#" onclick="showPage('post-dishes')" class="nav-item"><i class="fa-solid fa-globe"></i> Community</a></li>
         </ul>
@@ -29,33 +25,42 @@
     <div class="container">
         <section id="home" class="page active">
             <div class="hero-header">
-                <img src="logo.png" alt="Bujju's Brews Logo" class="main-hero-logo">
                 <h1>Master Your <span class="text-gradient">Kitchen</span></h1>
-                <p class="intro-text">AI-powered generation and fermentation tracking for Bujju.</p>
+                <p class="intro-text">Personalized AI generation and community broadcasting.</p>
             </div>
 
             <div class="glass-card settings-card account-card">
                 <div class="card-icon icon-cyan"><i class="fa-solid fa-user-astronaut"></i></div>
                 <div class="card-content">
                     <h3>User Authentication</h3>
-                    <p>Initialize your local ID to sign your community transmissions.</p>
+                    <p>Create your local account ID to begin broadcasting to the community.</p>
                     <div class="input-group">
                         <input type="text" id="user-name-input" placeholder="Pick a Username...">
-                        <button class="btn-glow btn-cyan" onclick="saveUser()"><i class="fa-solid fa-user-plus"></i> Initialize</button>
-                        <button class="btn-glow btn-red-outline" onclick="resetUser()" style="width: auto; background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red);">
-                            <i class="fa-solid fa-power-off"></i> Reset
-                        </button>
+                        <button class="btn-glow btn-cyan" onclick="saveUser()"><i class="fa-solid fa-user-plus"></i> Initialize ID</button>
                     </div>
                     <span id="user-status" class="status-badge"></span>
                 </div>
             </div>
-
+            
             <div class="glass-card settings-card">
                 <div class="card-icon icon-gold"><i class="fa-solid fa-microchip"></i></div>
                 <div class="card-content">
                     <h3>Engine Settings</h3>
-                    <p>The Gemini AI core is active and ready for synthesis.</p>
-                    <span class="status-badge" style="color: #ff1e56;">Hardcoded System Core Detected.</span>
+                    <p>Your Gemini AI core must be initialized for synthesis features.</p>
+                    <span class="status-badge" style="color: #ff1e56;">Key is hardcoded in System Core.</span>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="glass-card feature-card hover-pulse" onclick="showPage('ai-recipe')">
+                    <div class="card-icon icon-red"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                    <h3>AI Synthesis</h3>
+                    <p>Generate recipes tailored to your current inventory logs.</p>
+                </div>
+                <div class="glass-card feature-card hover-bounce" onclick="showPage('post-dishes')">
+                    <div class="card-icon icon-purple"><i class="fa-solid fa-satellite-dish"></i></div>
+                    <h3>Broadcast</h3>
+                    <p>Share your successful data-logs with other active users.</p>
                 </div>
             </div>
         </section>
@@ -67,25 +72,6 @@
             <textarea id="ai-ingredients" rows="4" placeholder="[ INPUT INGREDIENTS ]..."></textarea>
             <button class="btn-glow btn-red" onclick="generateAI()" id="btn-generate">Synthesize</button>
             <div id="ai-output" class="output-box terminal-text">Awaiting input...</div>
-            <div class="action-bar" style="display: flex; gap: 10px; margin-top: 15px;">
-                <button id="btn-download" class="btn-glow btn-cyan" style="display: none;" onclick="downloadCurrentRecipe()">
-                    <i class="fa-solid fa-file-export"></i> Download (.txt)
-                </button>
-                <button id="btn-shop" class="btn-glow btn-purple" style="display: none;" onclick="extractShoppingList()">
-                    <i class="fa-solid fa-cart-shopping"></i> Shopping List
-                </button>
-            </div>
-            <div id="shopping-list-display" class="glass-card" style="display: none; margin-top: 20px;">
-                <h3><i class="fa-solid fa-list-check"></i> To Acquire</h3>
-                <ul id="shopping-items" class="terminal-text" style="list-style: none; padding: 0;"></ul>
-            </div>
-        </section>
-
-        <section id="history" class="page">
-            <div class="page-header header-gold">
-                <h2><i class="fa-solid fa-clock-rotate-left"></i> Synthesis History</h2>
-            </div>
-            <div id="history-list"></div>
         </section>
 
         <section id="store-measurements" class="page">
@@ -93,33 +79,30 @@
                 <h2><i class="fa-solid fa-sliders"></i> Algorithmic Scaler</h2>
             </div>
             <div class="input-grid">
-                <input type="text" id="recipe-name" placeholder="Recipe Name">
-                <input type="number" id="base-servings" placeholder="Base Yield">
+                <input type="text" id="recipe-name" placeholder="Target Recipe">
+                <input type="number" id="base-servings" placeholder="Baseline Yield">
             </div>
-            <textarea id="base-ingredients" rows="3" placeholder="Ingredients..."></textarea>
+            <textarea id="base-ingredients" rows="3" placeholder="Baseline Ingredients..."></textarea>
             <div class="scale-section">
                 <input type="number" id="target-servings" placeholder="New Yield">
-                <button class="btn-glow btn-cyan" onclick="scaleRecipe()" id="btn-scale">Scale Now</button>
+                <button class="btn-glow btn-cyan" onclick="scaleRecipe()" id="btn-scale">Execute Scaling</button>
             </div>
             <div id="scale-output" class="output-box terminal-text">Awaiting data...</div>
         </section>
 
         <section id="post-dishes" class="page">
             <div class="page-header header-purple">
-                <h2><i class="fa-solid fa-satellite-dish"></i> Broadcast Feed</h2>
+                <h2><i class="fa-solid fa-satellite-dish"></i> Community Broadcast</h2>
             </div>
             <div class="glass-card post-form">
                 <div class="active-user-display">Logged in as: <span id="display-username">Guest</span></div>
-                <input type="text" id="post-title" placeholder="Designation">
-                <textarea id="post-desc" rows="3" placeholder="Transmission Log..."></textarea>
-                <button class="btn-glow btn-purple" onclick="postDish()">Broadcast</button>
+                <input type="text" id="post-title" placeholder="Dish / Brew Designation">
+                <textarea id="post-desc" rows="3" placeholder="Transmission Log: How did you make it?"></textarea>
+                <button class="btn-glow btn-purple" onclick="postDish()">Broadcast to Feed</button>
             </div>
-            <div id="feed"></div>
+            <div id="feed" class="feed-container"></div>
         </section>
     </div>
-    <footer style="text-align: center; color: var(--text-muted); padding: 40px;">
-        &copy; 2026 Bujju's Brews | CE Cherthala Engineering Project
-    </footer>
     <script src="app.js"></script>
 </body>
 </html>
