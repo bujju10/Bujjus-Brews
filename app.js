@@ -1,4 +1,4 @@
-const API_KEY = "PASTE_YOUR_NEW_KEY_HERE"; 
+const API_KEY = "AIzaSyDAEvOygDRjBKem_l2QVLUTLA4aDgdsAe4"; 
 
 window.onload = () => {
     const savedUser = localStorage.getItem('bujjuUser');
@@ -88,3 +88,4 @@ function renderFeed() {
         feed.appendChild(div);
     });
 }
+
