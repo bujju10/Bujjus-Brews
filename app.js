@@ -17,7 +17,15 @@ function saveUser() {
     document.getElementById('display-username').innerText = user;
     alert(`Account initialized for ${user}!`);
 }
-
+function resetUser() {
+    if (confirm("Are you sure you want to reset your User ID? This will log you out.")) {
+        localStorage.removeItem('bujjuUser');
+        document.getElementById('user-status').innerText = "ID Reset. Please re-initialize.";
+        document.getElementById('display-username').innerText = "Guest";
+        document.getElementById('user-name-input').value = "";
+        alert("User ID has been cleared.");
+    }
+}
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
@@ -88,3 +96,4 @@ function renderFeed() {
         feed.appendChild(div);
     });
 }
+
