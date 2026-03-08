@@ -26,26 +26,41 @@
         <section id="home" class="page active">
             <div class="hero-header">
                 <h1>Master Your <span class="text-gradient">Kitchen</span></h1>
-                <p class="intro-text">AI-powered generation, scaling, and fermentation tracking.</p>
+                <p class="intro-text">Personalized AI generation and community broadcasting.</p>
+            </div>
+
+            <div class="glass-card settings-card account-card">
+                <div class="card-icon icon-cyan"><i class="fa-solid fa-user-astronaut"></i></div>
+                <div class="card-content">
+                    <h3>User Authentication</h3>
+                    <p>Create your local account ID to begin broadcasting to the community.</p>
+                    <div class="input-group">
+                        <input type="text" id="user-name-input" placeholder="Pick a Username...">
+                        <button class="btn-glow btn-cyan" onclick="saveUser()"><i class="fa-solid fa-user-plus"></i> Initialize ID</button>
+                    </div>
+                    <span id="user-status" class="status-badge"></span>
+                </div>
+            </div>
+            
+            <div class="glass-card settings-card">
+                <div class="card-icon icon-gold"><i class="fa-solid fa-microchip"></i></div>
+                <div class="card-content">
+                    <h3>Engine Settings</h3>
+                    <p>Your Gemini AI core must be initialized for synthesis features.</p>
+                    <span class="status-badge" style="color: #ff1e56;">Key is hardcoded in System Core.</span>
+                </div>
             </div>
 
             <div class="features-grid">
                 <div class="glass-card feature-card hover-pulse" onclick="showPage('ai-recipe')">
                     <div class="card-icon icon-red"><i class="fa-solid fa-fire-flame-curved"></i></div>
-                    <h3>1. AI Generation</h3>
-                    <p>Input available ingredients and let the neural net synthesize a perfect recipe.</p>
+                    <h3>AI Synthesis</h3>
+                    <p>Generate recipes tailored to your current inventory logs.</p>
                 </div>
-                
-                <div class="glass-card feature-card hover-float" onclick="showPage('store-measurements')">
-                    <div class="card-icon icon-cyan"><i class="fa-solid fa-sliders"></i></div>
-                    <h3>2. Smart Scaling</h3>
-                    <p>Dynamic algorithmic scaling for any batch size. Let the AI calculate the perfect ratios.</p>
-                </div>
-                
                 <div class="glass-card feature-card hover-bounce" onclick="showPage('post-dishes')">
                     <div class="card-icon icon-purple"><i class="fa-solid fa-satellite-dish"></i></div>
-                    <h3>3. Network Feed</h3>
-                    <p>Broadcast your successful brews and dishes to the local community mainframe.</p>
+                    <h3>Broadcast</h3>
+                    <p>Share your successful data-logs with other active users.</p>
                 </div>
             </div>
         </section>
@@ -53,48 +68,37 @@
         <section id="ai-recipe" class="page">
             <div class="page-header header-red">
                 <h2><i class="fa-solid fa-fire-flame-curved"></i> AI Recipe Synthesis</h2>
-                <p>Initialize the generator with your current inventory.</p>
             </div>
-            <textarea id="ai-ingredients" rows="4" placeholder="[ INPUT INGREDIENTS ]: e.g., 2kg grapes, yeast, sugar..."></textarea>
-            <button class="btn-glow btn-red" onclick="generateAI()" id="btn-generate"><i class="fa-solid fa-wand-magic-sparkles"></i> Synthesize Recipe</button>
-            <div id="ai-output" class="output-box terminal-text">Awaiting input parameters...</div>
+            <textarea id="ai-ingredients" rows="4" placeholder="[ INPUT INGREDIENTS ]..."></textarea>
+            <button class="btn-glow btn-red" onclick="generateAI()" id="btn-generate">Synthesize</button>
+            <div id="ai-output" class="output-box terminal-text">Awaiting input...</div>
         </section>
 
         <section id="store-measurements" class="page">
             <div class="page-header header-cyan">
                 <h2><i class="fa-solid fa-sliders"></i> Algorithmic Scaler</h2>
-                <p>Input baseline metrics to calculate new yields.</p>
             </div>
-            
             <div class="input-grid">
-                <input type="text" id="recipe-name" placeholder="Target Recipe (e.g., Homemade Bread)">
-                <input type="number" id="base-servings" placeholder="Baseline Yield (e.g., 5)">
+                <input type="text" id="recipe-name" placeholder="Target Recipe">
+                <input type="number" id="base-servings" placeholder="Baseline Yield">
             </div>
-            <textarea id="base-ingredients" rows="3" placeholder="Baseline Ingredients (e.g., 500g flour, 10g yeast)"></textarea>
-            
+            <textarea id="base-ingredients" rows="3" placeholder="Baseline Ingredients..."></textarea>
             <div class="scale-section">
-                <div class="scale-controls">
-                    <label><i class="fa-solid fa-crosshairs"></i> Target Yield:</label>
-                    <input type="number" id="target-servings" placeholder="e.g., 10">
-                </div>
-                <button class="btn-glow btn-cyan" onclick="scaleRecipe()" id="btn-scale"><i class="fa-solid fa-bolt-lightning"></i> Execute Scaling</button>
+                <input type="number" id="target-servings" placeholder="New Yield">
+                <button class="btn-glow btn-cyan" onclick="scaleRecipe()" id="btn-scale">Execute Scaling</button>
             </div>
-            <div id="scale-output" class="output-box terminal-text">Awaiting baseline data...</div>
+            <div id="scale-output" class="output-box terminal-text">Awaiting data...</div>
         </section>
 
         <section id="post-dishes" class="page">
             <div class="page-header header-purple">
                 <h2><i class="fa-solid fa-satellite-dish"></i> Community Broadcast</h2>
-                <p>Transmit your logs to the network.</p>
             </div>
-            
             <div class="glass-card post-form">
-                <div class="input-grid">
-                    <input type="text" id="post-title" placeholder="Dish / Brew Designation">
-                    <input type="text" id="post-author" placeholder="Author ID">
-                </div>
+                <div class="active-user-display">Logged in as: <span id="display-username">Guest</span></div>
+                <input type="text" id="post-title" placeholder="Dish / Brew Designation">
                 <textarea id="post-desc" rows="3" placeholder="Transmission Log: How did you make it?"></textarea>
-                <button class="btn-glow btn-purple" onclick="postDish()"><i class="fa-solid fa-paper-plane"></i> Broadcast</button>
+                <button class="btn-glow btn-purple" onclick="postDish()">Broadcast to Feed</button>
             </div>
             <div id="feed" class="feed-container"></div>
         </section>
@@ -102,4 +106,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-
