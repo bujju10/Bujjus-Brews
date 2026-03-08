@@ -149,5 +149,41 @@ function renderFeed() {
         feed.appendChild(div);
     });
 }
+// --- NEW DOWNLOAD LOGIC ---
+
+function downloadCurrentRecipe() {
+    const content = document.getElementById('ai-output').innerText;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `Bujjus_Brews_Log_${timestamp}.txt`;
+    
+    // Create the file data
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a hidden link and click it to trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    
+    // Cleanup
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+// --- UPDATE YOUR generateAI FUNCTION ---
+// Add one line at the end of your generateAI function in app.js:
+
+async function generateAI() {
+    // ... existing logic ...
+    const result = await fetchFromAI(prompt, 'btn-generate', 'Synthesize');
+    output.innerText = result;
+
+    // Show the download button once the recipe is ready
+    document.getElementById('btn-download').style.display = 'inline-flex';
+
+    // ... save to history logic ...
+}
 
 
