@@ -247,3 +247,25 @@ input:focus, textarea:focus {
     .nav-item { padding: 8px; font-size: 0.9rem; }
     .nav-item span { display: none; }
 }
+/* --- USER ACCOUNT & AUTH STYLES --- */
+.account-card { 
+    border-left-color: var(--accent-cyan) !important; 
+    margin-bottom: 20px; 
+}
+
+.active-user-display { 
+    margin-bottom: 15px; 
+    padding: 10px; 
+    background: rgba(0, 240, 255, 0.1); 
+    border-radius: 6px; 
+    border: 1px solid var(--accent-cyan);
+    font-family: monospace; 
+    font-size: 0.9rem; 
+    color: var(--accent-cyan);
+    text-shadow: 0 0 5px var(--glow-cyan);
+}
+
+#display-username { 
+    font-weight: bold; 
+    text-transform: uppercase; 
+}
