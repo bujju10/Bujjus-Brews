@@ -1,6 +1,6 @@
 // --- PASTE YOUR API KEY HERE ---
 // Keep the quotation marks around your key!
-const API_KEY = "AIzaSyBdHGfuXYOTuvxpPC2VlrhMd6Mc3pTHk4o"; 
+const API_KEY = "AIzaSyApRa4McEqwT72F8urmxOJ7xt3UPC_grxU"; 
 
 // --- Navigation & Setup ---
 window.onload = () => {
@@ -107,5 +107,6 @@ function renderFeed() {
         feed.appendChild(div);
     });
 }
+
 
 
