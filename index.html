@@ -21,6 +21,17 @@
             <li><a href="#" onclick="showPage('post-dishes')" class="nav-item"><i class="fa-solid fa-globe"></i> Community</a></li>
         </ul>
     </nav>
+    <div class="nav-brand">
+    <img src="logo.png" alt="Logo" class="nav-logo-img"> 
+    Bujju's Brews
+</div>
+
+<section id="home" class="page active">
+    <div class="hero-header">
+        <img src="logo.png" alt="Bujju's Brews Logo" class="main-hero-logo">
+        <h1>Master Your <span class="text-gradient">Kitchen</span></h1>
+        <p class="intro-text">AI-powered generation, scaling, and fermentation tracking.</p>
+    </div>
     <ul class="nav-links">
     <li><a href="#" onclick="showPage('home')" class="nav-item"><i class="fa-solid fa-house"></i> Home</a></li>
     <li><a href="#" onclick="showPage('ai-recipe')" class="nav-item"><i class="fa-solid fa-bolt"></i> AI Recipe</a></li>
@@ -88,7 +99,18 @@
             <button class="btn-glow btn-red" onclick="generateAI()" id="btn-generate">Synthesize</button>
             <div id="ai-output" class="output-box terminal-text">Awaiting input...</div>
         </section>
-
+        <section id="ai-recipe" class="page">
+    <div class="page-header header-red">
+        <h2><i class="fa-solid fa-fire-flame-curved"></i> AI Recipe Synthesis</h2>
+    </div>
+    <textarea id="ai-ingredients" rows="4" placeholder="[ INPUT INGREDIENTS ]..."></textarea>
+    <button class="btn-glow btn-red" onclick="generateAI()" id="btn-generate">Synthesize</button>
+    
+    <div id="ai-output" class="output-box terminal-text">Awaiting input...</div>
+    <button id="btn-download" class="btn-glow btn-cyan" style="margin-top: 15px; display: none;" onclick="downloadCurrentRecipe()">
+        <i class="fa-solid fa-file-export"></i> Download Log (.txt)
+    </button>
+</section>
         <section id="store-measurements" class="page">
             <div class="page-header header-cyan">
                 <h2><i class="fa-solid fa-sliders"></i> Algorithmic Scaler</h2>
@@ -121,5 +143,6 @@
     <script src="app.js"></script>
 </body>
 </html>
+
 
 
