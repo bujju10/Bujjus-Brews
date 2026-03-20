@@ -36,28 +36,31 @@ function resetUser() {
 
 // --- CORE AI COMMUNICATION ---
 // --- CORE AI COMMUNICATION ---
+// --- CORE AI COMMUNICATION ---
 async function fetchFromAI(prompt, buttonId, originalBtnText) {
     const btn = document.getElementById(buttonId);
     btn.innerText = "Processing..."; 
     btn.disabled = true;
 
     try {
-        // UPDATED: Swapped the model to the universally supported 'gemini-pro'
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+        // UPDATED ENDPOINT: Using gemini-1.5-flash which is the current standard
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
+        
         const data = await response.json();
         btn.innerText = originalBtnText; 
         btn.disabled = false;
         
         if(data.error) {
+            console.error("Full API Error:", data.error);
             return `API Error: ${data.error.message}`;
         }
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
-        console.error(error);
+        console.error("Fetch Error:", error);
         btn.innerText = originalBtnText; 
         btn.disabled = false;
         return "Error: Connection lost or API key invalid.";
