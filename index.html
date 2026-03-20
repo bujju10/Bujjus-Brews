@@ -13,10 +13,14 @@
     <div class="bg-glow glow-cyan"></div>
 
     <nav class="navbar">
-        <div class="nav-brand"><i class="fa-solid fa-flask-vial brand-icon"></i> Bujju's Brews</div>
+        <div class="nav-brand">
+            <img src="logo.png" alt="Logo" class="nav-logo-img"> 
+            Bujju's Brews
+        </div>
         <ul class="nav-links">
             <li><a href="#" onclick="showPage('home')" class="nav-item"><i class="fa-solid fa-house"></i> Home</a></li>
             <li><a href="#" onclick="showPage('ai-recipe')" class="nav-item"><i class="fa-solid fa-bolt"></i> AI Recipe</a></li>
+            <li><a href="#" onclick="showPage('history')" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
             <li><a href="#" onclick="showPage('store-measurements')" class="nav-item"><i class="fa-solid fa-layer-group"></i> Scale</a></li>
             <li><a href="#" onclick="showPage('post-dishes')" class="nav-item"><i class="fa-solid fa-globe"></i> Community</a></li>
         </ul>
@@ -25,18 +29,20 @@
     <div class="container">
         <section id="home" class="page active">
             <div class="hero-header">
+                <img src="logo.png" alt="Bujju's Brews Logo" class="main-hero-logo">
                 <h1>Master Your <span class="text-gradient">Kitchen</span></h1>
-                <p class="intro-text">Personalized AI generation and community broadcasting.</p>
+                <p class="intro-text">AI-powered recipe generation, precise batch scaling, and fermentation tracking.</p>
             </div>
 
             <div class="glass-card settings-card account-card">
-                <div class="card-icon icon-cyan"><i class="fa-solid fa-user-astronaut"></i></div>
+                <div class="card-icon icon-cyan"><i class="fa-solid fa-user-pen"></i></div>
                 <div class="card-content">
                     <h3>User Authentication</h3>
-                    <p>Create your local account ID to begin broadcasting to the community.</p>
+                    <p>Initialize your local account ID to begin broadcasting your recipes.</p>
                     <div class="input-group">
                         <input type="text" id="user-name-input" placeholder="Pick a Username...">
                         <button class="btn-glow btn-cyan" onclick="saveUser()"><i class="fa-solid fa-user-plus"></i> Initialize ID</button>
+                        <button class="btn-glow btn-red-outline" onclick="resetUser()" style="width: auto; background: transparent; border: 1px solid var(--primary-red); color: var(--primary-red);"><i class="fa-solid fa-power-off"></i> Reset</button>
                     </div>
                     <span id="user-status" class="status-badge"></span>
                 </div>
@@ -46,7 +52,7 @@
                 <div class="card-icon icon-gold"><i class="fa-solid fa-microchip"></i></div>
                 <div class="card-content">
                     <h3>Engine Settings</h3>
-                    <p>Your Gemini AI core must be initialized for synthesis features.</p>
+                    <p>Your AI core must be initialized for recipe synthesis features.</p>
                     <span class="status-badge" style="color: #ff1e56;">Key is hardcoded in System Core.</span>
                 </div>
             </div>
@@ -55,12 +61,12 @@
                 <div class="glass-card feature-card hover-pulse" onclick="showPage('ai-recipe')">
                     <div class="card-icon icon-red"><i class="fa-solid fa-fire-flame-curved"></i></div>
                     <h3>AI Synthesis</h3>
-                    <p>Generate recipes tailored to your current inventory logs.</p>
+                    <p>Generate precise recipes tailored to your current inventory logs.</p>
                 </div>
                 <div class="glass-card feature-card hover-bounce" onclick="showPage('post-dishes')">
                     <div class="card-icon icon-purple"><i class="fa-solid fa-satellite-dish"></i></div>
                     <h3>Broadcast</h3>
-                    <p>Share your successful data-logs with other active users.</p>
+                    <p>Share your successful culinary data-logs with other active users.</p>
                 </div>
             </div>
         </section>
@@ -71,7 +77,30 @@
             </div>
             <textarea id="ai-ingredients" rows="4" placeholder="[ INPUT INGREDIENTS ]..."></textarea>
             <button class="btn-glow btn-red" onclick="generateAI()" id="btn-generate">Synthesize</button>
+            
             <div id="ai-output" class="output-box terminal-text">Awaiting input...</div>
+            
+            <div class="action-bar" style="display: flex; gap: 10px; margin-top: 15px;">
+                <button id="btn-download" class="btn-glow btn-cyan" style="display: none;" onclick="downloadCurrentRecipe()">
+                    <i class="fa-solid fa-file-export"></i> Download Log (.txt)
+                </button>
+                <button id="btn-shop" class="btn-glow btn-purple" style="display: none;" onclick="extractShoppingList()">
+                    <i class="fa-solid fa-cart-shopping"></i> Shopping List
+                </button>
+            </div>
+            
+            <div id="shopping-list-display" class="glass-card" style="display: none; margin-top: 20px;">
+                <h3><i class="fa-solid fa-list-check"></i> Ingredients to Acquire</h3>
+                <ul id="shopping-items" class="terminal-text" style="list-style: none; padding: 0;"></ul>
+            </div>
+        </section>
+
+        <section id="history" class="page">
+            <div class="page-header header-gold">
+                <h2><i class="fa-solid fa-clock-rotate-left"></i> Synthesis History</h2>
+                <p>Retrieve past recipes generated by the AI core.</p>
+            </div>
+            <div id="history-list" class="feed-container"></div>
         </section>
 
         <section id="store-measurements" class="page">
@@ -103,6 +132,11 @@
             <div id="feed" class="feed-container"></div>
         </section>
     </div>
+    
+    <footer style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 0.8rem;">
+        &copy; 2026 Bujju's Brews | College of Engineering Cherthala
+    </footer>
+
     <script src="app.js"></script>
 </body>
 </html>
