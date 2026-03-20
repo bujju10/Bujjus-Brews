@@ -35,13 +35,15 @@ function resetUser() {
 }
 
 // --- CORE AI COMMUNICATION ---
+// --- CORE AI COMMUNICATION ---
 async function fetchFromAI(prompt, buttonId, originalBtnText) {
     const btn = document.getElementById(buttonId);
     btn.innerText = "Processing..."; 
     btn.disabled = true;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+        // UPDATED: Swapped the model to the universally supported 'gemini-pro'
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -61,7 +63,6 @@ async function fetchFromAI(prompt, buttonId, originalBtnText) {
         return "Error: Connection lost or API key invalid.";
     }
 }
-
 // --- 1. AI RECIPE SYNTHESIS ---
 async function generateAI() {
     const ingredients = document.getElementById('ai-ingredients').value;
