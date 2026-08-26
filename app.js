@@ -35,16 +35,17 @@ function resetUser() {
 }
 
 // --- CORE AI COMMUNICATION ---
-// --- CORE AI COMMUNICATION ---
-// --- CORE AI COMMUNICATION ---
-// --- CORE AI COMMUNICATION ---
 async function fetchFromAI(prompt, buttonId, originalBtnText) {
     const btn = document.getElementById(buttonId);
     btn.innerText = "Processing..."; 
     btn.disabled = true;
 
     try {
-        // UPDATED ENDPOINT: Using gemini-1.5-flash which is the current standard
+        // Safety check to ensure config.js is linked properly
+        if (typeof API_KEY === 'undefined' || API_KEY === "YOUR_NEW_API_KEY_HERE" || !API_KEY) {
+            throw new Error("API Key is missing. Please check your config.js file.");
+        }
+
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
@@ -56,15 +57,15 @@ async function fetchFromAI(prompt, buttonId, originalBtnText) {
         btn.disabled = false;
         
         if(data.error) {
-            console.error("Full API Error:", data.error);
-            return `API Error: ${data.error.message}`;
+            console.error("API Error Response:", data.error);
+            return `Google API Error: ${data.error.message}`;
         }
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
-        console.error("Fetch Error:", error);
+        console.error("System Fetch Error:", error);
         btn.innerText = originalBtnText; 
         btn.disabled = false;
-        return "Error: Connection lost or API key invalid.";
+        return `System Error: ${error.message}`;
     }
 }
 async function generateAI() {
