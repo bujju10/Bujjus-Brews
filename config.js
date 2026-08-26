@@ -1,1 +1,1 @@
-const API_KEY = "your-actual-api-key-here";
+const API_KEY = "AIzaSyA5zBDh3CUBPAESP3ez2EjOiK0RM27N7XY";
