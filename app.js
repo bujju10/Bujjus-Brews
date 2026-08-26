@@ -37,6 +37,7 @@ function resetUser() {
 // --- CORE AI COMMUNICATION ---
 // --- CORE AI COMMUNICATION ---
 // --- CORE AI COMMUNICATION ---
+// --- CORE AI COMMUNICATION ---
 async function fetchFromAI(prompt, buttonId, originalBtnText) {
     const btn = document.getElementById(buttonId);
     btn.innerText = "Processing..."; 
@@ -66,7 +67,6 @@ async function fetchFromAI(prompt, buttonId, originalBtnText) {
         return "Error: Connection lost or API key invalid.";
     }
 }
-// --- 1. AI RECIPE SYNTHESIS ---
 async function generateAI() {
     const ingredients = document.getElementById('ai-ingredients').value;
     const output = document.getElementById('ai-output');
