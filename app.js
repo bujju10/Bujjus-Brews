@@ -72,7 +72,8 @@ async function fetchFromAI(prompt, buttonId, originalBtnText) {
     btn.disabled = true;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+        // UPDATED TO THE LATEST REQUIRED MODEL: gemini-3.6-flash
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
@@ -94,7 +95,6 @@ async function fetchFromAI(prompt, buttonId, originalBtnText) {
         return `System Error: ${error.message}`;
     }
 }
-
 // --- 5. AI RECIPE SYNTHESIS ---
 async function generateAI() {
     const ingredients = document.getElementById('ai-ingredients').value;
