@@ -1,8 +1,6 @@
-// --- PASTE YOUR NEW API KEY HERE ---
-const API_KEY = "AIzaSyA5zBDh3CUBPAESP3ez2EjOiK0RM27N7XY"; 
-
-// --- INITIALIZATION ---
+// --- 1. INITIALIZATION ---
 window.onload = () => {
+    // Check for User
     const savedUser = localStorage.getItem('bujjuUser');
     if (savedUser) {
         const userStatus = document.getElementById('user-status');
@@ -10,16 +8,27 @@ window.onload = () => {
         if (userStatus) userStatus.innerText = `✅ ID Active: ${savedUser}`;
         if (displayUsername) displayUsername.innerText = savedUser;
     }
+    
+    // Check for API Key
+    if (localStorage.getItem('geminiApiKey')) {
+        const keyStatus = document.getElementById('key-status');
+        if (keyStatus) {
+            keyStatus.innerText = "✅ System Core Active";
+            keyStatus.style.color = "var(--accent-cyan)";
+        }
+    }
+
     renderHistory();
     renderFeed();
 };
 
+// --- 2. NAVIGATION ---
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
 }
 
-// --- USER AUTHENTICATION ---
+// --- 3. AUTHENTICATION & KEY MANAGEMENT ---
 function saveUser() {
     const user = document.getElementById('user-name-input').value;
     if (!user) return alert("Please enter a username!");
@@ -28,29 +37,46 @@ function saveUser() {
 }
 
 function resetUser() {
-    if (confirm("Are you sure you want to reset your User ID? This will log you out.")) {
+    if (confirm("Reset your User ID? This will log you out.")) {
         localStorage.removeItem('bujjuUser');
         location.reload();
     }
 }
 
-// --- CORE AI COMMUNICATION ---
+function saveApiKey() {
+    const key = document.getElementById('api-key-input').value;
+    if (!key) return alert("Please paste a valid API key!");
+    
+    localStorage.setItem('geminiApiKey', key);
+    
+    const status = document.getElementById('key-status');
+    if (status) {
+        status.innerText = "✅ API Key Saved Locally";
+        status.style.color = "var(--accent-cyan)";
+    }
+    document.getElementById('api-key-input').value = ""; 
+}
+
+// --- 4. CORE AI COMMUNICATION ---
 async function fetchFromAI(prompt, buttonId, originalBtnText) {
+    const apiKey = localStorage.getItem('geminiApiKey');
+    if (!apiKey) {
+        alert("System Error: Please save your Google Gemini API Key in the Engine Settings first.");
+        return "Error: Missing API Key.";
+    }
+
     const btn = document.getElementById(buttonId);
+    if (!btn) return "System Error: Button not found.";
+    
     btn.innerText = "Processing..."; 
     btn.disabled = true;
 
     try {
-        // Safety check to ensure config.js is linked properly
-        if (typeof API_KEY === 'undefined' || API_KEY === "YOUR_NEW_API_KEY_HERE" || !API_KEY) {
-            throw new Error("API Key is missing. Please check your config.js file.");
-        }
-
-       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
-    method: 'POST', 
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-});
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
         
         const data = await response.json();
         btn.innerText = originalBtnText; 
@@ -58,7 +84,7 @@ async function fetchFromAI(prompt, buttonId, originalBtnText) {
         
         if(data.error) {
             console.error("API Error Response:", data.error);
-            return `Google API Error: ${data.error.message}`;
+            return `API Error: ${data.error.message}`;
         }
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
@@ -68,29 +94,31 @@ async function fetchFromAI(prompt, buttonId, originalBtnText) {
         return `System Error: ${error.message}`;
     }
 }
+
+// --- 5. AI RECIPE SYNTHESIS ---
 async function generateAI() {
     const ingredients = document.getElementById('ai-ingredients').value;
     const output = document.getElementById('ai-output');
     if(!ingredients) return alert("Please enter some ingredients!");
     
-    const prompt = `Act as a realistic master chef. Create a practical, delicious recipe using primarily these ingredients: ${ingredients}. Format the response clearly with a Title, Ingredients list, and Step-by-Step Instructions. Keep instructions grounded in reality.`;
+    const prompt = `Act as a realistic master chef. Create a practical, delicious recipe using primarily these ingredients: ${ingredients}. Format the response clearly with a Title, Ingredients list, and Step-by-Step Instructions.`;
     output.innerText = "Synthesizing recipe...";
     
     const result = await fetchFromAI(prompt, 'btn-generate', 'Synthesize');
     output.innerText = result;
 
-    // Save to History
     let recipeHistory = JSON.parse(localStorage.getItem('bujjuHistory')) || [];
     recipeHistory.unshift({ ingredients: ingredients, recipe: result, date: new Date().toLocaleString() });
     localStorage.setItem('bujjuHistory', JSON.stringify(recipeHistory));
     renderHistory();
 
-    // Reveal extra action buttons
-    document.getElementById('btn-download').style.display = 'inline-flex';
-    document.getElementById('btn-shop').style.display = 'inline-flex';
+    const btnDownload = document.getElementById('btn-download');
+    const btnShop = document.getElementById('btn-shop');
+    if(btnDownload) btnDownload.style.display = 'inline-flex';
+    if(btnShop) btnShop.style.display = 'inline-flex';
 }
 
-// --- 2. EXTRACTION & DOWNLOAD TOOLS ---
+// --- 6. EXTRACTION TOOLS ---
 function downloadCurrentRecipe() {
     const content = document.getElementById('ai-output').innerText;
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -110,6 +138,7 @@ function extractShoppingList() {
     const recipeText = document.getElementById('ai-output').innerText;
     const listDisplay = document.getElementById('shopping-list-display');
     const listContainer = document.getElementById('shopping-items');
+    if (!listDisplay || !listContainer) return;
     
     let ingredientsPart = recipeText;
     const lowerText = recipeText.toLowerCase();
@@ -131,7 +160,7 @@ function extractShoppingList() {
     listDisplay.style.display = 'block';
 }
 
-// --- 3. SYNTHESIS HISTORY ---
+// --- 7. SYNTHESIS HISTORY ---
 function renderHistory() {
     const historyList = document.getElementById('history-list');
     if (!historyList) return;
@@ -156,7 +185,7 @@ function renderHistory() {
     });
 }
 
-// --- 4. ALGORITHMIC SCALER ---
+// --- 8. ALGORITHMIC SCALER ---
 async function scaleRecipe() {
     const name = document.getElementById('recipe-name').value;
     const base = document.getElementById('base-servings').value;
@@ -171,7 +200,7 @@ async function scaleRecipe() {
     output.innerText = await fetchFromAI(prompt, 'btn-scale', 'Execute Scaling');
 }
 
-// --- 5. COMMUNITY BROADCAST ---
+// --- 9. COMMUNITY BROADCAST ---
 let defaultPosts = [{
     title: "Classic Grape Wine Test", 
     author: "Bujju",
