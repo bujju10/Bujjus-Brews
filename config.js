@@ -35,6 +35,28 @@ function resetUser() {
     }
 }
 
+// --- API KEY MANAGEMENT ---
+function saveApiKey() {
+    const key = document.getElementById('api-key-input').value;
+    if (!key) {
+        alert("Please paste a valid API key!");
+        return;
+    }
+    
+    // Save the key to the browser's local storage
+    localStorage.setItem('geminiApiKey', key);
+    
+    // Update the red text to show success
+    const status = document.getElementById('key-status');
+    if (status) {
+        status.innerText = "✅ API Key Saved Locally";
+        status.style.color = "var(--accent-cyan)";
+    }
+    
+    // Clear the input box for security
+    document.getElementById('api-key-input').value = ""; 
+}
+
 // --- 5. AI COMMUNICATION ENGINE ---
 async function fetchFromAI(prompt, buttonId, originalBtnText) {
     const btn = document.getElementById(buttonId);
